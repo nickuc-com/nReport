@@ -1,0 +1,18 @@
+name: nReport
+version: ${pluginVersion}
+main: com.nickuc.report.bootstrap.nReportBukkit
+description: 'Um plugin simples de report.'
+website: 'https://www.nickuc.com'
+api-version: 1.13
+authors: [NickUC]
+commands:
+  report:
+    aliases:
+      - 'reportar'
+  reports:
+    aliases:
+      - 'reportes'
+permissions:
+  nreport.admin:
+    description: 'Dá acesso às notificações e ao comando /reportes'
+    default: op

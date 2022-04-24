@@ -1,0 +1,5 @@
+name: nReport
+version: ${pluginVersion}
+main: com.nickuc.report.boostrap.nReportBungee
+description: 'Um plugin simples de report.'
+author: NickUC
