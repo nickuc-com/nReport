@@ -45,7 +45,7 @@ import java.util.stream.Stream;
         url = "https://www.nickuc.com",
         authors = "NickUC"
 )
-public class nReportVelocity implements Platform<Player> {
+public class nReportVelocity implements ProxyPlatform<Player> {
 
     private nReport plugin;
 
@@ -134,6 +134,21 @@ public class nReportVelocity implements Platform<Player> {
                         Duration.ofSeconds(fadeOut * 50L)
                 )
         ));
+    }
+
+    @Override
+    public void sendServerConnectMessage(Player adminPlayer, Player sender, Player target) {
+        target.getCurrentServer().ifPresent(targetServer -> {
+            if (!targetServer.equals(sender.getCurrentServer().orElse(null))) {
+                String serverName = targetServer.getServerInfo().getName();
+                sendMessage(
+                        adminPlayer,
+                        " §8▪ §7Servidor: §f\"" + serverName + "\"",
+                        "§7Clique aqui para conectar para este servidor.",
+                        "/server " + serverName
+                );
+            }
+        });
     }
 
     @Override
