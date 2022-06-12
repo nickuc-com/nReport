@@ -116,7 +116,7 @@ public abstract class ReportCommand<P> {
         user.addReport(senderName, reportReason);
 
         platform.sendMessage(senderPlayer, "§7Você reportou o jogador §f" + targetName + " §7por §f\"" + reportReason + "\".");
-        plugin.print(senderName + " reportou " + targetName + " por \"" + reportReason + "\".");
+        plugin.getPlatform().getLoggingProvider().info(senderName + " reportou " + targetName + " por \"" + reportReason + "\".");
 
         String finalTarget = targetName;
         P finalTargetPlayer = targetPlayer;

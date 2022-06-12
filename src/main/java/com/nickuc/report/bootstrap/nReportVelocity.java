@@ -10,6 +10,7 @@ package com.nickuc.report.bootstrap;
 import com.google.inject.Inject;
 import com.nickuc.report.command.report.VelocityReportCommand;
 import com.nickuc.report.listener.VelocityListener;
+import com.nickuc.report.logging.LoggingProvider;
 import com.nickuc.report.model.Settings;
 import com.nickuc.report.nReport;
 import com.velocitypowered.api.command.CommandManager;
@@ -27,6 +28,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -34,7 +36,6 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.UUID;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 @Plugin(
@@ -48,17 +49,35 @@ import java.util.stream.Stream;
 public class nReportVelocity implements ProxyPlatform<Player> {
 
     private nReport plugin;
+    @Getter
+    private final LoggingProvider loggingProvider;
 
     private final ProxyServer server;
-    private final Logger logger;
+    private final Logger slf4jLogger;
     @Getter
     private final File dataFolder;
 
     @Inject
     public nReportVelocity(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
         this.server = server;
-        this.logger = logger;
+        this.slf4jLogger = logger;
         this.dataFolder = dataDirectory.toFile();
+        this.loggingProvider = new LoggingProvider() {
+            @Override
+            public void info(String message) {
+                logger.info(message);
+            }
+
+            @Override
+            public void error(String message) {
+                logger.error(message);
+            }
+
+            @Override
+            public void warn(String message) {
+                logger.warn(message);
+            }
+        };
     }
 
     @Subscribe
@@ -87,7 +106,12 @@ public class nReportVelocity implements ProxyPlatform<Player> {
 
     @Override
     public void print(String message) {
-        logger.info(message);
+        slf4jLogger.info(message);
+    }
+
+    @Override
+    public String getVersion() {
+        return "@version";
     }
 
     @Override

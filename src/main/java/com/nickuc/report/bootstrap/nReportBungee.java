@@ -9,8 +9,10 @@ package com.nickuc.report.bootstrap;
 
 import com.nickuc.report.command.report.BungeeReportCommand;
 import com.nickuc.report.listener.BungeeListener;
+import com.nickuc.report.logging.LoggingProvider;
 import com.nickuc.report.model.Settings;
 import com.nickuc.report.nReport;
+import lombok.Getter;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -29,15 +31,36 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public class nReportBungee extends Plugin implements ProxyPlatform<ProxiedPlayer> {
 
     private nReport plugin;
+    @Getter
+    private LoggingProvider loggingProvider;
     private File configFile;
 
     @Override
     public void onEnable() {
+        Logger javaLogger = getLogger();
+        loggingProvider = new LoggingProvider() {
+            @Override
+            public void info(String message) {
+                javaLogger.info(message);
+            }
+
+            @Override
+            public void error(String message) {
+                javaLogger.severe(message);
+            }
+
+            @Override
+            public void warn(String message) {
+                javaLogger.warning(message);
+            }
+        };
+
         configFile = new File(getDataFolder(), "config.yml");
 
         plugin = new nReport(this);
@@ -64,6 +87,11 @@ public class nReportBungee extends Plugin implements ProxyPlatform<ProxiedPlayer
     @Override
     public void print(String message) {
         getProxy().getConsole().sendMessage(TextComponent.fromLegacyText(message));
+    }
+
+    @Override
+    public String getVersion() {
+        return getDescription().getVersion();
     }
 
     @Override

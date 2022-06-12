@@ -1,5 +1,6 @@
 package com.nickuc.report.bootstrap;
 
+import com.nickuc.report.logging.LoggingProvider;
 import com.nickuc.report.model.Settings;
 
 import javax.annotation.Nullable;
@@ -10,6 +11,10 @@ import java.util.stream.Stream;
 public interface Platform<P> {
 
     void print(String message);
+
+    LoggingProvider getLoggingProvider();
+
+    String getVersion();
 
     File getDataFolder();
 

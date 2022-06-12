@@ -11,9 +11,11 @@ import com.nickuc.report.command.report.BukkitReportCommand;
 import com.nickuc.report.command.reports.ReportesCommand;
 import com.nickuc.report.inventory.InventoryListener;
 import com.nickuc.report.listener.BukkitListener;
+import com.nickuc.report.logging.LoggingProvider;
 import com.nickuc.report.management.UserManagement;
 import com.nickuc.report.model.Settings;
 import com.nickuc.report.nReport;
+import lombok.Getter;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -27,14 +29,35 @@ import org.bukkit.plugin.java.JavaPlugin;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public class nReportBukkit extends JavaPlugin implements Platform<Player> {
 
     private nReport plugin;
+    @Getter
+    private LoggingProvider loggingProvider;
 
     @Override
     public void onEnable() {
+        Logger javaLogger = getLogger();
+        loggingProvider = new LoggingProvider() {
+            @Override
+            public void info(String message) {
+                javaLogger.info(message);
+            }
+
+            @Override
+            public void error(String message) {
+                javaLogger.severe(message);
+            }
+
+            @Override
+            public void warn(String message) {
+                javaLogger.warning(message);
+            }
+        };
+
         plugin = new nReport(this);
         plugin.enablePlugin();
 
@@ -74,6 +97,11 @@ public class nReportBukkit extends JavaPlugin implements Platform<Player> {
     @Override
     public void print(String message) {
         getServer().getConsoleSender().sendMessage(message);
+    }
+
+    @Override
+    public String getVersion() {
+        return getDescription().getVersion();
     }
 
     @Override

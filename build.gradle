@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.nickuc.report'
-version = '2.6.2'
+version = '3.0.0'
 
 def lombokVersion = '1.18.22'
 def mojangAuthLib = '1.5.21'
