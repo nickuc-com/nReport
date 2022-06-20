@@ -27,7 +27,7 @@ public class SkullItem {
 
         try {
             String obcPrefix = Bukkit.getServer().getClass().getPackage().getName();
-            Class<?> skullMetaClass = Class.forName(obcPrefix + "inventory.CraftMetaSkull");
+            Class<?> skullMetaClass = Class.forName(obcPrefix + ".inventory.CraftMetaSkull");
             PROFILE_FIELD = skullMetaClass.getDeclaredField("profile");
             PROFILE_FIELD.setAccessible(true);
         } catch (ClassNotFoundException | NoClassDefFoundError | NoSuchFieldException exception) {

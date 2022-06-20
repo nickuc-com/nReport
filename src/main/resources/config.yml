@@ -4,25 +4,19 @@
 #  | | | / _  \  __/ |_) | (_) | |  | |_
 #  |_| |_\/ \_/\___| .__/ \___/|_|   \__|
 #                  |_|
+#       github.com/nickuc/nReport
 
-# Configuração do nReport
-# Precisa de suporte? Entre em nosso grupo do discord: https://www.nickuc.com/discord
+# Define o tempo (em minutos) de cooldown do report.
+delay: 5
 
-# Modo de depuração: É utilizado para correção de problemas no plugin.
-debug-mode: false
+# Define se reports com motivos customizados podem ser enviados.
+allow-other-reason: true
 
-Config:
-  # Quantidade de tempo em minutos para se realizar um report.
-  reportsDelay: 5
-
-  # Permitir reports diferentes do configurado?
-  allow-other-reports: true
-
-  # Lista de reports disponíveis
-  reports:
-    - "Exploração de falhas/Bugs"
-    - "Uso de Hack"
-    - "Uso de clientes alternativos"
-    - "Ofensas/Ameaças"
-    - "Spam/Flood"
-    - "Nickname impróprio"
+# Define a lista de motivos.
+reports:
+  - "Exploração de falhas/Bugs"
+  - "Uso de Hack"
+  - "Uso de clientes alternativos"
+  - "Ofensas/Ameaças"
+  - "Spam/Flood"
+  - "Nickname impróprio"

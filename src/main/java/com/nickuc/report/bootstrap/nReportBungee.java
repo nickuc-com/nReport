@@ -108,11 +108,11 @@ public class nReportBungee extends Plugin implements ProxyPlatform<ProxiedPlayer
         try {
             Configuration configuration = provider.load(configFile);
 
-            List<String> loadedReports = configuration.getStringList("Config.reports");
-            int delayReports = configuration.getInt("Config.reportsDelay", 5);
-            boolean allowOtherReports = configuration.getBoolean("Config.allow-other-reports");
+            List<String> loadedReports = configuration.getStringList("reports");
+            int delayReports = configuration.getInt("delay", 5);
+            boolean allowOtherReason = configuration.getBoolean("allow-other-reason");
 
-            return new Settings(loadedReports, delayReports, allowOtherReports);
+            return new Settings(loadedReports, delayReports, allowOtherReason);
         } catch (IOException exception) {
             throw new RuntimeException("Could not load config.yml!", exception);
         }

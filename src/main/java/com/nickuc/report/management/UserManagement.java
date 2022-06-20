@@ -31,8 +31,6 @@ public class UserManagement {
                     @Cleanup FileInputStream fileInputStream = new FileInputStream(file);
                     @Cleanup DataInputStream dataInputStream = new DataInputStream(fileInputStream);
 
-                    Map<String, Integer> reportQuantity = new HashMap<>();
-
                     // header
                     int version = dataInputStream.readInt();
 
@@ -61,25 +59,27 @@ public class UserManagement {
     public synchronized void save(User user) {
         UUID uniqueId = user.getUniqueId();
         File file = new File(userDataFolder, uniqueId + ".data");
-        if (file.exists()) {
-            try {
-                @Cleanup FileOutputStream fileOutputStream = new FileOutputStream(file);
-                @Cleanup DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream);
-
-                // header
-                dataOutputStream.writeInt(VERSION);
-
-                // data
-                List<Report> reportList = user.getReportList();
-                dataOutputStream.writeInt(reportList.size());
-                for (Report report : reportList) {
-                    dataOutputStream.writeUTF(report.getAuthor());
-                    dataOutputStream.writeUTF(report.getReason());
-                    dataOutputStream.writeLong(report.getTime());
-                }
-            } catch (IOException exception) {
-                throw new RuntimeException("Could not load " + uniqueId + " from " + file + " file!", exception);
+        try {
+            if (!file.exists() && !file.createNewFile()) {
+                throw new RuntimeException("Could not create new file " + file + "!");
             }
+
+            @Cleanup FileOutputStream fileOutputStream = new FileOutputStream(file);
+            @Cleanup DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream);
+
+            // header
+            dataOutputStream.writeInt(VERSION);
+
+            // data
+            List<Report> reportList = user.getReportList();
+            dataOutputStream.writeInt(reportList.size());
+            for (Report report : reportList) {
+                dataOutputStream.writeUTF(report.getAuthor());
+                dataOutputStream.writeUTF(report.getReason());
+                dataOutputStream.writeLong(report.getTime());
+            }
+        } catch (IOException exception) {
+            throw new RuntimeException("Could not load " + uniqueId + " from " + file + " file!", exception);
         }
     }
 

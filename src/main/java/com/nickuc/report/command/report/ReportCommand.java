@@ -10,6 +10,7 @@ package com.nickuc.report.command.report;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.nickuc.report.bootstrap.Platform;
+import com.nickuc.report.management.UserManagement;
 import com.nickuc.report.model.Settings;
 import com.nickuc.report.model.User;
 import com.nickuc.report.nReport;
@@ -83,12 +84,13 @@ public abstract class ReportCommand<P> {
                     color = !color;
                     platform.sendMessage(
                             senderPlayer,
-                            "  §a▪ " + (color ? "§7" : "§f" + report),
+                            "  §a▪ " + (color ? "§7" : "§f") + report,
                             "§7Clique para reportar este jogador por " + report + ".",
                             "/" + lb + " " + targetName + " " + report
                     );
                 }
-                if (settings.isAllowOtherReports()) {
+                if (settings.isAllowOtherReason()) {
+                    color = !color;
                     platform. sendMessage(
                             senderPlayer,
                             "  §a▪ " + (color ? "§7" : "§f") + "Outro motivo",
@@ -104,16 +106,19 @@ public abstract class ReportCommand<P> {
         }
 
         String reportReason = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-        if (!settings.isAllowOtherReports() && settings.getLoadedReports().stream().noneMatch(reportReason::equalsIgnoreCase)) {
+        if (!settings.isAllowOtherReason() && settings.getLoadedReports().stream().noneMatch(reportReason::equalsIgnoreCase)) {
             platform.sendMessage(senderPlayer, "§cDesculpe, mas esse tipo de report não existe.");
             return;
         }
 
         DELAY_CACHE.put(senderName, currentTime);
 
+        UserManagement userManagement = plugin.getUserManagement();
+
         UUID targetUniqueId = platform.getUniqueId(targetPlayer);
-        User user = plugin.getUserManagement().getOrLoadFromCache(targetUniqueId);
+        User user = userManagement.getOrLoadFromCache(targetUniqueId);
         user.addReport(senderName, reportReason);
+        userManagement.save(user);
 
         platform.sendMessage(senderPlayer, "§7Você reportou o jogador §f" + targetName + " §7por §f\"" + reportReason + "\".");
         plugin.getPlatform().getLoggingProvider().info(senderName + " reportou " + targetName + " por \"" + reportReason + "\".");

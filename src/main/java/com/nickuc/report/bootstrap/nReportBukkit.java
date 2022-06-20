@@ -110,11 +110,11 @@ public class nReportBukkit extends JavaPlugin implements Platform<Player> {
         reloadConfig();
 
         FileConfiguration config = getConfig();
-        List<String> loadedReports = config.getStringList("Config.reports");
-        int delayReports = config.getInt("Config.reportsDelay", 5);
-        boolean allowOtherReports = config.getBoolean("Config.allow-other-reports");
+        List<String> loadedReports = config.getStringList("reports");
+        int delayReports = config.getInt("delay", 5);
+        boolean allowOtherReason = config.getBoolean("allow-other-reason");
 
-        return new Settings(loadedReports, delayReports, allowOtherReports);
+        return new Settings(loadedReports, delayReports, allowOtherReason);
     }
 
     @SuppressWarnings("unchecked")

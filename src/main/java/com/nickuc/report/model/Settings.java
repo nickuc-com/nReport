@@ -11,6 +11,6 @@ public class Settings {
 
     private final List<String> loadedReports;
     private final int delayReports;
-    private final boolean allowOtherReports;
+    private final boolean allowOtherReason;
 
 }
