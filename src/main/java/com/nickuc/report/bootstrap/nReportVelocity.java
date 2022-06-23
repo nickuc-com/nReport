@@ -28,6 +28,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
+import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
@@ -56,12 +57,14 @@ public class nReportVelocity implements ProxyPlatform<Player> {
     private final Logger slf4jLogger;
     @Getter
     private final File dataFolder;
+    private final Metrics.Factory metricsFactory;
 
     @Inject
-    public nReportVelocity(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
+    public nReportVelocity(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory, Metrics.Factory metricsFactory) {
         this.server = server;
         this.slf4jLogger = logger;
         this.dataFolder = dataDirectory.toFile();
+        this.metricsFactory = metricsFactory;
         this.loggingProvider = new LoggingProvider() {
             @Override
             public void info(String message) {
@@ -94,6 +97,8 @@ public class nReportVelocity implements ProxyPlatform<Player> {
 
         // register listeners
         server.getEventManager().register(this, new VelocityListener(plugin.getUserManagement()));
+
+        metricsFactory.make(this, 15559);
     }
 
     @Subscribe

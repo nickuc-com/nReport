@@ -19,6 +19,7 @@ import lombok.Getter;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -84,6 +85,8 @@ public class nReportBukkit extends JavaPlugin implements Platform<Player> {
         PluginManager pluginManager = server.getPluginManager();
         pluginManager.registerEvents(new BukkitListener(userManagement), this);
         pluginManager.registerEvents(new InventoryListener(server, userManagement), this);
+
+        new Metrics(this, 4076);
     }
 
     @Override

@@ -23,6 +23,7 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.bstats.bungeecord.Metrics;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -74,6 +75,8 @@ public class nReportBungee extends Plugin implements ProxyPlatform<ProxiedPlayer
 
         // register listeners
         pluginManager.registerListener(this, new BungeeListener(plugin.getUserManagement()));
+
+        new Metrics(this, 15558);
     }
 
     @Override
