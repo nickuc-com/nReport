@@ -8,6 +8,7 @@
 package com.nickuc.report.command.reports;
 
 import com.nickuc.report.inventory.SkullItem;
+import com.nickuc.report.inventory.holder.MainMenuHolder;
 import com.nickuc.report.management.UserManagement;
 import com.nickuc.report.model.Report;
 import com.nickuc.report.model.User;
@@ -39,7 +40,10 @@ public class ReportesCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        Inventory newInventory = Bukkit.createInventory(null, 6 * 9, "§8Todos os Reports");
+
+        MainMenuHolder mainMenuHolder = new MainMenuHolder();
+        Inventory newInventory = Bukkit.createInventory(mainMenuHolder, 6 * 9, "§8Todos os Reports");
+        mainMenuHolder.init(newInventory);
 
         int itemIndex = 10;
         players_loop: for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {

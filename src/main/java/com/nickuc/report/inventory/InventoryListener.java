@@ -7,11 +7,12 @@
 
 package com.nickuc.report.inventory;
 
+import com.nickuc.report.inventory.holder.MainMenuHolder;
+import com.nickuc.report.inventory.holder.PlayerReportsHolder;
+import com.nickuc.report.inventory.holder.nReportHolder;
 import com.nickuc.report.management.UserManagement;
 import com.nickuc.report.model.User;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -27,7 +28,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @AllArgsConstructor
 public class InventoryListener implements Listener {
@@ -37,40 +37,19 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        Inventory inventory = event.getInventory();
-        ItemStack item = event.getCurrentItem();
-        if (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
-            Player player = (Player) event.getWhoClicked();
-            String invName = event.getView().getTitle();
-            if (invName.equalsIgnoreCase("§8Todos os Reports")) {
-                event.setCancelled(true);
+        InventoryHolder holder = event.getInventory().getHolder();
+        if (holder instanceof nReportHolder) {
+            event.setCancelled(true);
 
-                String playerName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-                Player targetPlayer = server.getPlayer(playerName);
-                if (targetPlayer == null) {
-                    player.closeInventory();
-                    player.chat("/reportes");
-                    return;
-                }
-
-                User user = userManagement.getOrLoadFromCache(targetPlayer.getUniqueId());
-
-                Holder holder = new Holder(targetPlayer.getUniqueId());
-                Inventory newInventory = server.createInventory(null, 3 * 9, "§8Reports de " + playerName);
-                holder.inventory = newInventory;
-
-                newInventory.setItem(13, createItemStack(user));
-                player.openInventory(newInventory);
-            } else {
-                InventoryHolder inventoryHolder = inventory.getHolder();
-                if (inventoryHolder instanceof Holder) {
-                    event.setCancelled(true);
-
+            ItemStack item = event.getCurrentItem();
+            if (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+                Player player = (Player) event.getWhoClicked();
+                if (holder instanceof PlayerReportsHolder) {
                     ClickType clickType = event.getClick();
                     switch (clickType) {
                         case RIGHT:
                         case SHIFT_RIGHT:
-                            userManagement.delete(((Holder) inventoryHolder).uniqueId);
+                            userManagement.delete(((PlayerReportsHolder) holder).getUniqueId());
 
                         case LEFT:
                         case SHIFT_LEFT:
@@ -78,6 +57,25 @@ public class InventoryListener implements Listener {
                             player.chat("/reportes");
                             break;
                     }
+                } else if (holder instanceof MainMenuHolder) {
+                    String playerName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+                    Player targetPlayer = server.getPlayer(playerName);
+                    if (targetPlayer == null) {
+                        player.closeInventory();
+                        player.chat("/reportes");
+                        return;
+                    }
+
+                    User user = userManagement.getOrLoadFromCache(targetPlayer.getUniqueId());
+
+                    PlayerReportsHolder playerReportsHolder = new PlayerReportsHolder(targetPlayer.getUniqueId());
+                    Inventory newInventory = server.createInventory(playerReportsHolder, 3 * 9, "§8Reports de " + playerName);
+                    playerReportsHolder.init(newInventory);
+
+                    newInventory.setItem(13, createItemStack(user));
+                    player.openInventory(newInventory);
+                } else {
+                    throw new IllegalArgumentException("Holder " + holder.getClass().getCanonicalName() + " not implemented yet!");
                 }
             }
         }
@@ -106,14 +104,4 @@ public class InventoryListener implements Listener {
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
-
-    @RequiredArgsConstructor
-    public static class Holder implements InventoryHolder {
-
-        private final UUID uniqueId;
-        @Getter
-        private Inventory inventory;
-
-    }
-
 }
