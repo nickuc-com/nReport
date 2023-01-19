@@ -101,7 +101,7 @@ public class nReportBungee extends Plugin implements ProxyPlatform<ProxiedPlayer
     public Settings loadSettings() {
         ConfigurationProvider provider = YamlConfiguration.getProvider(ConfigurationProvider.class);
         if (!configFile.exists()) {
-            try (InputStream inputStream = getResourceAsStream("/config.yml")) {
+            try (InputStream inputStream = getResourceAsStream("config.yml")) {
                 Files.copy(inputStream, configFile.toPath());
             } catch (IOException exception) {
                 throw new RuntimeException("Could not copy config.yml from JAR!", exception);
