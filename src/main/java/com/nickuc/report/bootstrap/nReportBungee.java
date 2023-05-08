@@ -99,7 +99,7 @@ public class nReportBungee extends Plugin implements ProxyPlatform<ProxiedPlayer
 
     @Override
     public Settings loadSettings() {
-        ConfigurationProvider provider = YamlConfiguration.getProvider(ConfigurationProvider.class);
+        ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
         if (!configFile.exists()) {
             try (InputStream inputStream = getResourceAsStream("config.yml")) {
                 Files.copy(inputStream, configFile.toPath());
